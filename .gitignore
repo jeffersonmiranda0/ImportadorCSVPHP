@@ -1,0 +1,7 @@
+/vendor/*
+/vendor
+/tests/utils/file/*
+/tests/utils/file
+/.idea
+/.idea/*
+/.idea/vcs.xml
