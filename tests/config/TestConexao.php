@@ -17,7 +17,7 @@ class TestConexao extends TestCase
     private $conn;
 
 
-    private function fetch() {
+    private function fetch($pdo) {
         return ["database()" => "teste"];
     }
 
@@ -30,15 +30,19 @@ class TestConexao extends TestCase
             ->getMock();
 
         $this->conn
+            ->expects($this->exactly(1))
             ->method("query")
-            ->with("SELECT database()")
-            ->willReturn($this);
+            ->willReturnCallback(function($query){
+                $this->assertInternalType("string", $query);
+                $this->assertEquals("SELECT database()", $query);
+                return $this;
+            });
     }
 
     public function testNameDatabase()
     {
-
-        $database = $this->conn->query("SELECT database()")
+        $database = $this->conn
+            ->query("SELECT database()")
             ->fetch(\PDO::FETCH_ASSOC)["database()"];
 
         $this->assertEquals('teste', $database, 'NOME DA CONEXAO COM O BANCO DE DADOS');
